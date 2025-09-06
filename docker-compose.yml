@@ -1,0 +1,137 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: inventory_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory_user
+      POSTGRES_PASSWORD: inventory_pass
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init:/docker-entrypoint-initdb.d
+    networks:
+      - inventory_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Session Storage & Caching
+  redis:
+    image: redis:7-alpine
+    container_name: inventory_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - inventory_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: inventory_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://inventory_user:inventory_pass@postgres:5432/inventory_db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      JWT_REFRESH_SECRET: your-super-secret-refresh-key-change-in-production
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      API_PORT: 5000
+      STRIPE_SECRET_KEY: sk_test_your_stripe_secret_key
+      STRIPE_WEBHOOK_SECRET: whsec_your_webhook_secret
+      EMAIL_SERVICE: sendgrid
+      EMAIL_API_KEY: your_email_api_key
+      EMAIL_FROM: noreply@inventory.local
+      CORS_ORIGIN: http://localhost:3000,http://frontend:3000
+      RATE_LIMIT_WINDOW: 900000
+      RATE_LIMIT_MAX_REQUESTS: 100
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
+    networks:
+      - inventory_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: inventory_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_your_stripe_publishable_key
+      NEXT_PUBLIC_APP_NAME: Inventory Management System
+      NEXT_PUBLIC_APP_DESCRIPTION: Complete inventory and e-commerce solution
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - inventory_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: inventory_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - inventory_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  inventory_network:
+    driver: bridge
