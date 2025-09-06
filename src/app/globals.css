@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Warm Minimal Design System Colors */
+    /* Sand/Cream Background Palette */
+    --sand-50: 44 50% 98%;
+    --sand-100: 42 47% 95%;
+    --sand-200: 39 44% 87%;
+    --sand-300: 37 41% 78%;
+    --sand-400: 34 38% 69%;
+    --sand-500: 32 35% 60%;
+    --sand-600: 29 32% 51%;
+    
+    --cream-50: 48 50% 98%;
+    --cream-100: 46 47% 96%;
+    --cream-200: 44 44% 90%;
+    --cream-300: 42 41% 83%;
+    
+    /* Clay/Terracotta Accent Palette */
+    --clay-50: 22 45% 96%;
+    --clay-100: 22 42% 91%;
+    --clay-200: 22 39% 82%;
+    --clay-300: 22 36% 73%;
+    --clay-400: 22 33% 64%;
+    --clay-500: 22 30% 55%;
+    --clay-600: 22 42% 46%;
+    --clay-700: 22 45% 37%;
+    --clay-800: 22 48% 28%;
+    --clay-900: 22 51% 19%;
+    
+    /* Charcoal Text Palette */
+    --charcoal-50: 220 15% 96%;
+    --charcoal-100: 220 12% 89%;
+    --charcoal-200: 220 10% 78%;
+    --charcoal-300: 220 8% 67%;
+    --charcoal-400: 220 6% 56%;
+    --charcoal-500: 220 5% 45%;
+    --charcoal-600: 220 6% 34%;
+    --charcoal-700: 220 8% 23%;
+    --charcoal-800: 220 10% 15%;
+    --charcoal-900: 220 15% 9%;
+
+    /* System Colors with Warm Tone */
+    --background: hsl(var(--sand-50));
+    --foreground: hsl(var(--charcoal-900));
+    --card: 0 0% 100%;
+    --card-foreground: hsl(var(--charcoal-900));
+    --popover: 0 0% 100%;
+    --popover-foreground: hsl(var(--charcoal-900));
+    --primary: hsl(var(--clay-600));
+    --primary-foreground: 0 0% 98%;
+    --secondary: hsl(var(--sand-100));
+    --secondary-foreground: hsl(var(--charcoal-800));
+    --muted: hsl(var(--sand-100));
+    --muted-foreground: hsl(var(--charcoal-500));
+    --accent: hsl(var(--clay-50));
+    --accent-foreground: hsl(var(--clay-800));
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 43 96% 56%;
+    --warning-foreground: 0 0% 98%;
+    --border: hsl(var(--sand-200));
+    --input: hsl(var(--sand-200));
+    --ring: hsl(var(--clay-600));
+    
+    /* Chart Colors */
+    --chart-1: hsl(var(--clay-500));
+    --chart-2: hsl(var(--sand-600));
+    --chart-3: hsl(var(--charcoal-400));
+    --chart-4: hsl(var(--clay-300));
+    --chart-5: hsl(var(--sand-400));
+    
+    --radius: 1rem;
+  }
+
+  .dark {
+    /* Dark theme with warm undertones */
+    --background: hsl(var(--charcoal-900));
+    --foreground: hsl(var(--sand-50));
+    --card: hsl(var(--charcoal-800));
+    --card-foreground: hsl(var(--sand-50));
+    --popover: hsl(var(--charcoal-800));
+    --popover-foreground: hsl(var(--sand-50));
+    --primary: hsl(var(--clay-500));
+    --primary-foreground: hsl(var(--charcoal-900));
+    --secondary: hsl(var(--charcoal-700));
+    --secondary-foreground: hsl(var(--sand-100));
+    --muted: hsl(var(--charcoal-700));
+    --muted-foreground: hsl(var(--charcoal-300));
+    --accent: hsl(var(--charcoal-700));
+    --accent-foreground: hsl(var(--sand-100));
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: hsl(var(--charcoal-700));
+    --input: hsl(var(--charcoal-700));
+    --ring: hsl(var(--clay-500));
+    
+    --chart-1: hsl(var(--clay-400));
+    --chart-2: hsl(var(--sand-400));
+    --chart-3: hsl(var(--charcoal-300));
+    --chart-4: hsl(var(--clay-200));
+    --chart-5: hsl(var(--sand-300));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  /* Custom color classes for our palette */
+  .bg-sand-50 { background-color: hsl(var(--sand-50)); }
+  .bg-sand-100 { background-color: hsl(var(--sand-100)); }
+  .bg-sand-200 { background-color: hsl(var(--sand-200)); }
+  .bg-sand-300 { background-color: hsl(var(--sand-300)); }
+  .bg-sand-400 { background-color: hsl(var(--sand-400)); }
+  .bg-sand-500 { background-color: hsl(var(--sand-500)); }
+  .bg-sand-600 { background-color: hsl(var(--sand-600)); }
+  
+  .bg-cream-50 { background-color: hsl(var(--cream-50)); }
+  .bg-cream-100 { background-color: hsl(var(--cream-100)); }
+  .bg-cream-200 { background-color: hsl(var(--cream-200)); }
+  .bg-cream-300 { background-color: hsl(var(--cream-300)); }
+  
+  .bg-clay-50 { background-color: hsl(var(--clay-50)); }
+  .bg-clay-100 { background-color: hsl(var(--clay-100)); }
+  .bg-clay-200 { background-color: hsl(var(--clay-200)); }
+  .bg-clay-300 { background-color: hsl(var(--clay-300)); }
+  .bg-clay-400 { background-color: hsl(var(--clay-400)); }
+  .bg-clay-500 { background-color: hsl(var(--clay-500)); }
+  .bg-clay-600 { background-color: hsl(var(--clay-600)); }
+  .bg-clay-700 { background-color: hsl(var(--clay-700)); }
+  .bg-clay-800 { background-color: hsl(var(--clay-800)); }
+  .bg-clay-900 { background-color: hsl(var(--clay-900)); }
+  
+  .text-clay-50 { color: hsl(var(--clay-50)); }
+  .text-clay-100 { color: hsl(var(--clay-100)); }
+  .text-clay-200 { color: hsl(var(--clay-200)); }
+  .text-clay-300 { color: hsl(var(--clay-300)); }
+  .text-clay-400 { color: hsl(var(--clay-400)); }
+  .text-clay-500 { color: hsl(var(--clay-500)); }
+  .text-clay-600 { color: hsl(var(--clay-600)); }
+  .text-clay-700 { color: hsl(var(--clay-700)); }
+  .text-clay-800 { color: hsl(var(--clay-800)); }
+  .text-clay-900 { color: hsl(var(--clay-900)); }
+  
+  .text-charcoal-50 { color: hsl(var(--charcoal-50)); }
+  .text-charcoal-100 { color: hsl(var(--charcoal-100)); }
+  .text-charcoal-200 { color: hsl(var(--charcoal-200)); }
+  .text-charcoal-300 { color: hsl(var(--charcoal-300)); }
+  .text-charcoal-400 { color: hsl(var(--charcoal-400)); }
+  .text-charcoal-500 { color: hsl(var(--charcoal-500)); }
+  .text-charcoal-600 { color: hsl(var(--charcoal-600)); }
+  .text-charcoal-700 { color: hsl(var(--charcoal-700)); }
+  .text-charcoal-800 { color: hsl(var(--charcoal-800)); }
+  .text-charcoal-900 { color: hsl(var(--charcoal-900)); }
+  
+  .border-clay-200 { border-color: hsl(var(--clay-200)); }
+  .border-clay-600 { border-color: hsl(var(--clay-600)); }
+  
+  .hover\\:bg-clay-50:hover { background-color: hsl(var(--clay-50)); }
+  .hover\\:bg-clay-700:hover { background-color: hsl(var(--clay-700)); }
+}
